@@ -47,19 +47,19 @@ class RatingMovieAPIView(APIView):
 # solve
 # waiting 272 ms with postman
 
-# class MovieLinkAPIView(APIView):
+class MovieLinkAPIView(APIView):
 
-#     def get(self, request):
-#         # movies = Movie.objects.select_related('link').all() 
-#         # serializer = MovieLinkSerializer(movies, many=True)
-#         # return Response(serializer.data)
+    def get(self, request):
+        # movies = Movie.objects.select_related('link').all() 
+        # serializer = MovieLinkSerializer(movies, many=True)
+        # return Response(serializer.data)
 
 
-#         # return as tuple
-#         movies = Movie.objects.select_related('link').values_list(
-#             'movieId', 'title', 'genres', 'link__imdbId', 'link__tmdbId'
-#         )
-#         return Response(movies)
+        # return as tuple
+        movies = Movie.objects.select_related('link').values_list(
+            'movieId', 'title', 'genres', 'link__imdbId', 'link__tmdbId'
+        )
+        return Response(movies)
 
 class RatingMovieAPIView(APIView):
 
@@ -95,22 +95,15 @@ class MovedeferAPIView(APIView):
         movies = Movie.objects.defer('genres').values_list('genres')
         serializer = MoviedeferSerializer(movies, many =True)
         return Response(serializer.data)
-    
 
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from movies.models import Rating
-
-
-# 210 ms in postman
+# 210 ms in silk
 class RatingByIndexedAPIView(APIView):
     def get(self, request):
         value = request.query_params.get('rating', 4.5)
         ratings = Rating.objects.filter(rating=value).values('userId', 'movie_id', 'rating')
         return Response(list(ratings))
 
-# 255 ms in postman
+# 255 ms in silk
 class RatingByNonIndexedAPIView(APIView):
     def get(self, request):
         
