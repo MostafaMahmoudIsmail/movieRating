@@ -13,18 +13,18 @@ import cProfile, io, pstats
 
 class MovieLinkAPIView(APIView):
     def get(self, request):
-        pr = cProfile.Profile()
-        pr.enable()
+        # pr = cProfile.Profile()
+        # pr.enable()
 
         movies = Movie.objects.select_related('link').values_list(
             'movieId', 'title', 'genres', 'link__imdbId', 'link__tmdbId'
         )
         result = list(movies)
 
-        pr.disable()
-        s = io.StringIO()
-        pstats.Stats(pr, stream=s).sort_stats('cumtime').print_stats(10)
-        print(s.getvalue())  # appears in terminal
+        # pr.disable()
+        # s = io.StringIO()
+        # pstats.Stats(pr, stream=s).sort_stats('cumtime').print_stats(10)
+        # print(s.getvalue())  # appears in terminal
         return Response(result)
 
 
@@ -77,8 +77,10 @@ class MovieFilterQAPIView(APIView):
 
 
 class MovieUpdateAPIView(APIView):
-    def patch(self,request):
-        Movie.objects.filter(genres="Animation").update(genres="anime")
+    def patch(self, request):
+        Movie.objects.filter(genres="Animation").update(
+            genres=F("genres").replace("Animation", "anime")
+        )
         return Response({"message": "update done"})
     
 class MoveOnlyAPIView(APIView):

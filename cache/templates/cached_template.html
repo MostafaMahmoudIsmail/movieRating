@@ -1,0 +1,11 @@
+{% load cache %}
+<h2>CACHED TEMPLATE</h2>
+<hr>
+{% cache 300 sidebar %}
+<div >
+    <h3>Categories</h3>
+    {% for cat in categories %}
+        <p>{{ cat }}</p>
+    {% endfor %}
+</div>
+{% endcache %}
